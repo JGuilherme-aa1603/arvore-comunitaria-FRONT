@@ -1,0 +1,43 @@
+<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Árvore animada em SVG</title>
+  <desc id="desc">Árvore com folhas que balançam suavemente como se fosse o vento.</desc>
+
+  <defs>
+    <!-- Gradiente do tronco -->
+    <linearGradient id="troncoGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8b5a2b"/>
+      <stop offset="100%" stop-color="#5d3a1a"/>
+    </linearGradient>
+
+    <!-- Gradiente das folhas -->
+    <radialGradient id="folhasGrad" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#58c173"/>
+      <stop offset="70%" stop-color="#2f9e55"/>
+      <stop offset="100%" stop-color="#237a41"/>
+    </radialGradient>
+
+    <!-- Caminho da copa -->
+    <path id="copaPath"
+          d="M150,45
+             C120,35 85,60 90,95
+             C60,100 60,145 100,150
+             C95,180 125,200 150,190
+             C175,200 205,180 200,150
+             C240,145 240,100 210,95
+             C215,60 180,35 150,45 Z" />
+  </defs>
+
+  <!-- Tronco -->
+  <rect x="138" y="170" width="24" height="60" rx="6" fill="url(#troncoGrad)"/>
+
+  <!-- Copa animada -->
+  <g>
+    <use href="#copaPath" fill="url(#folhasGrad)">
+      <animateTransform attributeName="transform"
+                        type="rotate"
+                        values="-2 150 120; 2 150 120; -2 150 120"
+                        dur="3s"
+                        repeatCount="indefinite"/>
+    </use>
+  </g>
+</svg>
