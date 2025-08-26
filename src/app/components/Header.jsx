@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import MenuIcon from "../../components/icons/MenuIcon.jsx";
 import CloseIcon from "../../components/icons/CloseIcon.jsx";
 
@@ -38,14 +39,12 @@ function Header() {
           Árvore Comunitária
         </h1>
         <nav className="hidden md:flex items-center space-x-4">
-          <button
-            className={`font-semibold transition-colors duration-300 ${buttonTextColor}`}
-          >
-            Login
-          </button>
-          <button className="bg-yellow-400 text-green-900 font-bold py-2 px-5 rounded-full hover:bg-yellow-300 transition-colors duration-200">
-            Cadastre-se
-          </button>
+          <Link href="/login">
+            <span className={`font-semibold transition-colors duration-300 ${buttonTextColor}`}>Login</span>
+          </Link>
+          <Link href="/cadastro">
+            <span className="bg-yellow-400 text-green-900 font-bold py-2 px-5 rounded-full hover:bg-yellow-300 transition-colors duration-200">Cadastre-se</span>
+          </Link>
         </nav>
         <div className="md:hidden">
           <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -59,12 +58,12 @@ function Header() {
       </div>
       {isMenuOpen && (
         <div className="md:hidden bg-green-800 text-center">
-          <button className="block w-full py-3 text-white font-semibold hover:bg-green-700 transition-colors duration-200">
-            Login
-          </button>
-          <button className="block w-full py-4 bg-yellow-400 text-green-900 font-bold hover:bg-yellow-300 transition-colors duration-200">
-            Cadastre-se
-          </button>
+          <Link href="/login">
+            <span className="block w-full py-3 text-white font-semibold hover:bg-green-700 transition-colors duration-200">Login</span>
+          </Link>
+          <Link href="/cadastro">
+            <span className="block w-full py-4 bg-yellow-400 text-green-900 font-bold hover:bg-yellow-300 transition-colors duration-200">Cadastre-se</span>
+          </Link>
         </div>
       )}
     </header>
