@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 function Hero() {
   return (
@@ -19,9 +20,11 @@ function Hero() {
           real, simbolizando o esforço coletivo contra as mudanças climáticas.
         </p>
 
-        <button className="bg-yellow-400 text-green-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-500 transition-colors duration-300">
-          Comece a Plantar
-        </button>
+        <Link href="/login">
+          <button className="bg-yellow-400 text-green-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-500 transition-colors duration-300">
+            Comece a Plantar
+          </button>
+        </Link>
       </div>
     </section>
   );
