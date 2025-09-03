@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import apiClient from "@/lib/apiClient";
 
 export default function ArvoreComFolhas() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -23,48 +23,53 @@ export default function ArvoreComFolhas() {
     const img = new window.Image();
     img.src = "/assets/tree.png";
     img.onload = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    canvas.width = img.width;
-    canvas.height = img.height;
-    ctx.drawImage(img, 0, 0);
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const pixels = imageData.data;
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const pixels = imageData.data;
 
-    // Buscar folhas do "banco" via axios
-    axios.get(`${apiUrl}/api/commitment/`).then(response => {
-      const folhasBanco = response.data;
-      console.log("Folhas do banco:", folhasBanco);
-      const posicoesPossiveis = [];
-      for (let y = 0; y < canvas.height - 420; y += 30) {
-        for (let x = 0; x < canvas.width; x += 10) {
-          const index = (y * canvas.width + x) * 4;
-          const r = pixels[index];
-          const g = pixels[index + 1];
-          const b = pixels[index + 2];
-          const a = pixels[index + 3];
-          if (!isBrancoOuTransparente(r, g, b, a)) {
-            posicoesPossiveis.push({ x, y });
-            x += 70;
-            y += 1;
+      // Buscar folhas do "banco" via apiClient (com token JWT)
+      apiClient
+        .get("/api/commitment")
+        .then((response) => {
+          const folhasBanco = response.data;
+          console.log("Folhas do banco:", folhasBanco);
+          const posicoesPossiveis = [];
+          for (let y = 0; y < canvas.height - 420; y += 30) {
+            for (let x = 0; x < canvas.width; x += 10) {
+              const index = (y * canvas.width + x) * 4;
+              const r = pixels[index];
+              const g = pixels[index + 1];
+              const b = pixels[index + 2];
+              const a = pixels[index + 3];
+              if (!isBrancoOuTransparente(r, g, b, a)) {
+                posicoesPossiveis.push({ x, y });
+                x += 70;
+                y += 1;
+              }
+            }
           }
-        }
-      }
-      const folhasComDados = posicoesPossiveis.slice(0, folhasBanco.length).map((pos, i) => ({
-        ...pos,
-        autor: folhasBanco[i].nome,
-        descricao: folhasBanco[i].promessa
-      }));
-      setFolhas(folhasComDados);
-    }).catch(() => {
-      setFolhas([]); // fallback em caso de erro
-    });
-  };
-}, []);
+          const folhasComDados = posicoesPossiveis
+            .slice(0, folhasBanco.length)
+            .map((pos, i) => ({
+              ...pos,
+              autor: folhasBanco[i].nome,
+              descricao: folhasBanco[i].promessa,
+            }));
+          setFolhas(folhasComDados);
+        })
+        .catch(() => {
+          setFolhas([]); // fallback em caso de erro
+        });
+    };
+  }, []);
 
   useEffect(() => {
     const img = new window.Image();
-  img.src = "/assets/tree.png";
+    img.src = "/assets/tree.png";
     img.onload = () => setImgSize({ w: img.width, h: img.height });
   }, []);
 
@@ -73,6 +78,27 @@ export default function ArvoreComFolhas() {
       className="relative mx-auto"
       style={{ width: imgSize.w || 1, height: imgSize.h || 1 }}
     >
+      <a
+        href="/dashboard"
+        className="fixed bottom-6 left-6 z-[1100] bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-5 rounded-full shadow-lg flex items-center gap-2 transition-colors duration-200"
+        style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+          stroke="currentColor"
+          className="w-5 h-5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15.75 19.5L8.25 12l7.5-7.5"
+          />
+        </svg>
+        Voltar para Dashboard
+      </a>
       {/* Árvore */}
       <img
         src="/assets/tree.png"
@@ -108,14 +134,20 @@ export default function ArvoreComFolhas() {
         >
           <div
             className="bg-white rounded-xl px-6 py-8 min-w-[260px] shadow-lg text-center relative"
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="m-0 mb-3 text-xl font-bold text-black">{folhaSelecionada.autor}</h2>
-            <p className="text-base m-0 text-black">{folhaSelecionada.descricao}</p>
+            <h2 className="m-0 mb-3 text-xl font-bold text-black">
+              {folhaSelecionada.autor}
+            </h2>
+            <p className="text-base m-0 text-black">
+              {folhaSelecionada.descricao}
+            </p>
             <button
               className="mt-6 px-4 py-1.5 rounded-md border-none bg-green-600 text-white font-bold text-base cursor-pointer"
               onClick={() => setFolhaSelecionada(null)}
-            >Fechar</button>
+            >
+              Fechar
+            </button>
           </div>
         </div>
       )}

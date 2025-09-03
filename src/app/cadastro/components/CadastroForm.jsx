@@ -42,11 +42,23 @@ function CadastroForm() {
         router.push("/login");
       }, 2000);
     } catch (err) {
-      const errorMessage =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        err.message ||
-        "Falha no cadastro. Tente novamente.";
+      let errorMessage = "Falha no cadastro. Tente novamente.";
+      
+      if (err.response?.data?.error) {
+        // Se for um array de erros do Zod
+        if (Array.isArray(err.response.data.error)) {
+          errorMessage = err.response.data.error
+            .map(error => error.message || error)
+            .join(", ");
+        } else if (typeof err.response.data.error === "string") {
+          errorMessage = err.response.data.error;
+        }
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
       setError(errorMessage);
     } finally {
       setIsLoading(false);

@@ -30,16 +30,30 @@ function LoginForm() {
       const { token } = response.data;
 
       if (token) {
-        // Token should be set in an httpOnly cookie by the server for better security.
+        // Salva o token no localStorage para uso posterior
+        localStorage.setItem("authToken", token);
         router.push("/dashboard");
       } else {
         throw new Error("Token não recebido do servidor.");
       }
     } catch (err) {
-      const errorMessage =
-        err.response?.data?.message ||
-        err.message ||
-        "Falha no login. Verifique suas credenciais.";
+      let errorMessage = "Falha no login. Verifique suas credenciais.";
+
+      if (err.response?.data?.error) {
+        // Se for um array de erros do Zod
+        if (Array.isArray(err.response.data.error)) {
+          errorMessage = err.response.data.error
+            .map((error) => error.message || error)
+            .join(", ");
+        } else if (typeof err.response.data.error === "string") {
+          errorMessage = err.response.data.error;
+        }
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
       setError(errorMessage);
     } finally {
       setIsLoading(false);
