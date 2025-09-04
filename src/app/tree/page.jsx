@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import apiClient from "@/lib/apiClient";
 
 export default function ArvoreComFolhas() {
+  // Verifica se está logado
+  const isLoggedIn = typeof window !== "undefined" && localStorage.getItem("authToken");
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const canvasRef = useRef(null);
   const [folhas, setFolhas] = useState([]);
@@ -79,27 +81,51 @@ export default function ArvoreComFolhas() {
       className="relative mx-auto"
       style={{ width: imgSize.w || 1, height: imgSize.h || 1 }}
     >
-      <a
-        href="/dashboard"
-        className="fixed bottom-6 left-6 z-[1100] bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-5 rounded-full shadow-lg flex items-center gap-2 transition-colors duration-200"
-        style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={2}
-          stroke="currentColor"
-          className="w-5 h-5"
+      {isLoggedIn ? (
+        <a
+          href="/dashboard"
+          className="fixed bottom-6 left-6 z-[1100] bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-5 rounded-full shadow-lg flex items-center gap-2 transition-colors duration-200"
+          style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M15.75 19.5L8.25 12l7.5-7.5"
-          />
-        </svg>
-        Voltar para Dashboard
-      </a>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-5 h-5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 19.5L8.25 12l7.5-7.5"
+            />
+          </svg>
+          Voltar para Dashboard
+        </a>
+      ) : (
+        <a
+          href="/login"
+          className="fixed bottom-6 left-6 z-[1100] bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-full shadow-lg flex items-center gap-2 transition-colors duration-200"
+          style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-5 h-5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 19.5L8.25 12l7.5-7.5"
+            />
+          </svg>
+          Fazer Login
+        </a>
+      )}
       {/* Árvore */}
       <img
         src="/assets/tree.png"
