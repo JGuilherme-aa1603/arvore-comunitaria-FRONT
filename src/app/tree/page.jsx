@@ -56,8 +56,9 @@ export default function ArvoreComFolhas() {
             .slice(0, folhasBanco.length)
             .map((pos, i) => ({
               ...pos,
-              autor: folhasBanco[i].nome,
-              descricao: folhasBanco[i].promessa,
+              titulo: folhasBanco[i].titulo,
+              autor: folhasBanco[i].usuarios?.nome || folhasBanco[i].nome,
+              descricao: folhasBanco[i].descricao || folhasBanco[i].promessa,
             }));
           setFolhas(folhasComDados);
         })
@@ -118,10 +119,11 @@ export default function ArvoreComFolhas() {
             onClick={() => setFolhaSelecionada(f)}
           />
           <span
-            className="absolute bg-white/70 px-2 py-0.5 rounded-lg text-xs font-bold pointer-events-none select-none text-black"
+            className="absolute bg-white/80 px-2 py-0.5 rounded-lg text-xs font-bold pointer-events-none select-none text-black max-w-[120px] truncate"
             style={{ left: f.x + 20, top: f.y + 10 }}
+            title={f.titulo}
           >
-            {f.autor}
+            {f.titulo}
           </span>
         </React.Fragment>
       ))}
@@ -136,10 +138,11 @@ export default function ArvoreComFolhas() {
             className="bg-white rounded-xl px-6 py-8 min-w-[260px] shadow-lg text-center relative"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="m-0 mb-3 text-xl font-bold text-black">
-              {folhaSelecionada.autor}
+            <h2 className="m-0 mb-3 text-xl font-bold text-green-800">
+              {folhaSelecionada.titulo}
             </h2>
             <p className="text-base m-0 text-black">
+              <span className="block text-sm text-gray-600 mb-2">Autor: {folhaSelecionada.autor}</span>
               {folhaSelecionada.descricao}
             </p>
             <button
