@@ -3,14 +3,17 @@ import React, { useEffect, useRef, useState } from "react";
 import apiClient from "@/lib/apiClient";
 
 export default function ArvoreComFolhas() {
-  // Verifica se está logado
-  const isLoggedIn = typeof window !== "undefined" && localStorage.getItem("authToken");
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const canvasRef = useRef(null);
   const [folhas, setFolhas] = useState([]);
   const [folhaSelecionada, setFolhaSelecionada] = useState(null);
   const [imgSize, setImgSize] = useState({ w: 0, h: 0 });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem("authToken"));
+  }, []);
+  
   function isBrancoOuTransparente(r, g, b, a) {
     const tolerancia = 10;
     const isBranco =
