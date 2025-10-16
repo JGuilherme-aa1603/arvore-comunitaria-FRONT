@@ -164,7 +164,7 @@ export default function ArvoreComFolhas() {
           onClick={() => setFolhaSelecionada(null)}
         >
           <div
-            className="bg-white rounded-xl px-6 py-8 min-w-[260px] shadow-lg text-center relative"
+            className="bg-white rounded-xl px-6 py-8 min-w-[260px] max-w-md shadow-lg text-center relative"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="m-0 mb-3 text-xl font-bold text-green-800">
@@ -172,7 +172,9 @@ export default function ArvoreComFolhas() {
             </h2>
             <p className="text-base m-0 text-black">
               <span className="block text-sm text-gray-600 mb-2">Autor: {folhaSelecionada.autor}</span>
-              {folhaSelecionada.descricao}
+              <span className="overflow-y-auto max-h-[50vh] block">
+                {folhaSelecionada.descricao}
+              </span>
             </p>
             <button
               className="mt-6 px-4 py-1.5 rounded-md border-none bg-green-600 text-white font-bold text-base cursor-pointer"
